@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Expenses</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(135deg, #ffe6f2, #ffbfd4);
+  color: #4a004e;
+  height: 100vh;
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  padding: 25px;
+  background: rgba(255, 192, 203, 0.3);
+  border-right: 2px solid #ffb3cc;
+}
+.sidebar a {
+  display: block;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 10px;
+  color: inherit;
+}
+.sidebar a.active,
+.sidebar a:hover {
+  background: #ffb3cc;
+}
+
+/* Main */
+main {
+  flex: 1;
+  padding: 40px;
+}
+
+/* Expense Cards */
+.exp-card {
+  background: #ffd9e6;
+  padding: 18px 22px;
+  border-radius: 15px;
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.amount { font-weight: bold; }
+.expense { color: red; }
+</style>
+
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <h2 class="logo">Expense</h2>
+  
+  <a href="expense_tracker.html">Dashboard</a>
+  <a href="transactions.html">Transactions</a>
+  <a href="incomes.html">Incomes</a>
+  <a class="active" href="expenses.html">Expenses</a>
+</div>
+
+<!-- Main -->
+<main>
+  <h1>All Expenses</h1>
+
+  <div id="expList"></div>
+</main>
+
+<script>
+
+let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
+
+let expenses = transactions.filter(t => t.type === "Expense");
+
+function rupee(x) {
+  return "₹" + Number(x).toLocaleString();
+}
+
+
+function renderExpenses() {
+  let list = document.getElementById("expList");
+  list.innerHTML = "";
+
+  expenses.slice().reverse().forEach(t => {
+    let card = document.createElement("div");
+    card.className = "exp-card";
+
+    card.innerHTML = `
+      <div>
+        <strong>${t.title}</strong><br>
+        <small>${t.date}</small>
+      </div>
+      <div class="amount expense">- ${rupee(t.amount)}</div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+renderExpenses();
+</script>
+
+</body>
+</html>
